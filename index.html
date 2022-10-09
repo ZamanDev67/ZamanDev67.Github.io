@@ -33,7 +33,6 @@
          background-color: transparent; 
       } 
       #column_1 {
-        background-color: #FCF5E5;
         height:100%;
         position: absolute;
         top: 0px;
@@ -52,6 +51,25 @@
         left: 400px;
         overflow-y: scroll;
         width: 400px;
+      }
+      /* width */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+      }
+ 
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: #888; 
+      }
+
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
       }
     </style>
   </head>
