@@ -1,5 +1,4 @@
 <!doctype html>
-<!--https://www.sha-zam.net/index.html-->
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -9,125 +8,127 @@
     <title>nima shariat zamanpour</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <style>
-      
       @import url("https://use.typekit.net/ivv2sgr.css");
-      
+
       .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
         background-color: #D9D9D9 !important;
       }
+
       body {
         font-family: courier-std;
         cursor: url("MAIN/CURSOR/20221019_autocadcursor_p_15px_02.png") 7 7, default;
+        margin: 0;
+        padding: 0;
       }
+
       h1 {
         font-family: courier-std;
         text-decoration: underline;
         font-size: 14pt;
       }
+
       h2 {
         font-family: courier-std;
         font-size: 11pt;
       }
+
       h3 {
         font-family: century-gothic, sans-serif;
         text-align: center;
       }
+
       a {
         color: black;
         background-color: transparent;
         text-decoration: underline;
       }
+
       p {
         font-family: prestige-elite-std, monospace;
         font-weight: 400;
         font-style: normal;
       }
+
       .my-sidebar {
-         background-color: transparent; 
-      } 
-      .my-sidebar {
-         background-color: transparent; 
-      } 
-      #column_1 {
-        height:100%;
-        position: absolute;
-        top: 0px;
-        bottom: 0;
-        overflow-y: scroll;
+        background-color: transparent;
+        padding: 1rem;
       }
+
       #carousel {
         width: 100%;
         background-color: #676767;
-        overflow: scroll;
+        overflow-x: auto;
         white-space: nowrap;
       }
 
       #carousel .slide {
         display: inline-block;
       }
-      /* width */
+
       ::-webkit-scrollbar {
         height: 10px;
         width: 5px;
       }
 
-      /* Track */
       ::-webkit-scrollbar-track {
-        background: white; 
-      }
- 
-      /* Handle */
-      ::-webkit-scrollbar-thumb {
-        background: #D3D3D3; 
+        background: white;
       }
 
-      /* Handle on hover */
+      ::-webkit-scrollbar-thumb {
+        background: #D3D3D3;
+      }
+
       ::-webkit-scrollbar-thumb:hover {
-        background: #777; 
+        background: #777;
+      }
+
+      .sticky-header {
+        position: sticky;
+        top: 0;
+        background: white;
+        z-index: 10;
+        padding-bottom: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        h1, h2, h3, p {
+          font-size: 90%;
+        }
+
+        .sticky-header {
+          font-size: 12pt;
+        }
       }
     </style>
   </head>
   <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-    <div class="container text-left">
+
+    <div class="container-fluid">
       <div class="row">
-        
-        <!--ABOUT SIDEBAR-->
-        
-        <div class="col my-sidebar" id="column_1">
-          <div class="row">
+        <div class="col-12 my-sidebar">
+          <div class="sticky-header text-center">
             <h3>
-              <br>
-              <div class="text-nowrap" style="width: 8rem; position: sticky;">
-                  NIMA SHARIAT ZAMANPOUR
-              </div>
+              <div class="text-nowrap">NIMA SHARIAT ZAMANPOUR</div>
             </h3>
           </div>
-          <div class="row">
+
+          <h1>ABOUT</h1>
+          <p>
             <br>
-          </div>
-          <div class="row">
-            <h1> ABOUT </h1>
-            <p>
-              <br>
-              &#9;
-              Nima Shariat Zamanpour is an architect and artist based in Boston, MA. 
-              He currently serves as a project manager at William Rawn Associates and is the co-founder of TULPA, a research & consulting group that explores the connections between architecture, language, craft, and technology. 
-              Nima earned his Master of Architecture from the Harvard Graduate School of Design and holds Bachelor's degrees in Computer Science, Economics, and Art from UC Santa Cruz. He has taught at RISD, the BAC, and Wentworth, and has lectured at Harvard and Yale. 
-              <br>
-              <br>
-              &#9;
-              Nima's research interests encompass computational graphics, urban planning, AI, survivalism, simulations, and Science and Technology Studies (STS).
-              At William Rawn Associates, his work focuses on campus and city planning, as well as a range of institutional projects.
-              <br>
-              <br>
-              &#9;Outside of his work, Nima's interests include poetry, playing piano, the occult, flags, cars, and calligraphy. 
-              He speaks fluent Farsi and is actively trying not to forget the French he learned in high school.
-            </p>
-          </div>
-          <div>
-            <br>
-          </div>
+            &#9;
+            Nima Shariat Zamanpour is an architect and artist based in Boston, MA. 
+            He currently serves as a project manager at William Rawn Associates and is the co-founder of TULPA, a research & consulting group that explores the connections between architecture, language, craft, and technology. 
+            Nima earned his Master of Architecture from the Harvard Graduate School of Design and holds Bachelor's degrees in Computer Science, Economics, and Art from UC Santa Cruz. He has taught at RISD, the BAC, and Wentworth, and has lectured at Harvard and Yale. 
+            <br><br>
+            &#9;
+            Nima's research interests encompass computational graphics, urban planning, AI, survivalism, simulations, and Science and Technology Studies (STS). 
+            At William Rawn Associates, his work focuses on campus and city planning, as well as a range of institutional projects.
+            <br><br>
+            &#9;
+            Outside of his work, Nima's interests include poetry, playing piano, the occult, flags, cars, and calligraphy. 
+            He speaks fluent Farsi and is actively trying not to forget the French he learned in high school.
+          </p>
         </div>
       </div>
     </div>
