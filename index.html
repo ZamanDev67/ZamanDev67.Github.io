@@ -1,132 +1,353 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="https://use.typekit.net/ivv2sgr.css">
-    <title>nima shariat zamanpour</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-    <style>
-      @import url("https://use.typekit.net/ivv2sgr.css");
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://use.typekit.net/ivv2sgr.css">
+  <title>nima shariat zamanpour</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
-      .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
-        background-color: #D9D9D9 !important;
-      }
+  <!-- PDF.js (renders PDF pages to canvas) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- StPageFlip (book-like page flip UI) -->
+  <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
-      body {
-        font-family: courier-std;
-        cursor: url("MAIN/CURSOR/20221019_autocadcursor_p_15px_02.png") 7 7, default;
-        margin: 0;
-        padding: 0;
-      }
+  <style>
+    @import url("https://use.typekit.net/ivv2sgr.css");
 
-      h1 {
-        font-family: courier-std;
-        text-decoration: underline;
-        font-size: 14pt;
-      }
+    body {
+      font-family: courier-std, monospace;
+      cursor: url("MAIN/CURSOR/20221019_autocadcursor_p_15px_02.png") 7 7, default;
+      margin: 0;
+      padding: 0;
+    }
 
-      h2 {
-        font-family: courier-std;
-        font-size: 11pt;
-      }
+    h1 {
+      font-family: courier-std, monospace;
+      text-decoration: underline;
+      font-size: 14pt;
+      margin-top: 1.25rem;
+    }
+    h2 {
+      font-family: courier-std, monospace;
+      font-size: 11pt;
+      margin: 0.15rem 0;
+    }
+    h3 {
+      font-family: century-gothic, sans-serif;
+      text-align: center;
+      margin: 0;
+    }
+    a { color: black; background-color: transparent; text-decoration: underline; }
+    p {
+      font-family: prestige-elite-std, monospace;
+      font-weight: 400;
+      font-style: normal;
+    }
 
-      h3 {
-        font-family: century-gothic, sans-serif;
-        text-align: center;
-      }
+    .my-sidebar {
+      background-color: transparent;
+      padding: 1rem;
+      max-width: 980px; /* a bit wider so the book spread breathes */
+      margin: 0 auto;
+    }
 
-      a {
-        color: black;
-        background-color: transparent;
-        text-decoration: underline;
-      }
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 10;
+      padding: 0.75rem 0 0.5rem;
+    }
 
-      p {
-        font-family: prestige-elite-std, monospace;
-        font-weight: 400;
-        font-style: normal;
-      }
+    /* profile photo placeholder.
+       to swap in a real photo, replace the <div class="profile-photo"> block with:
+       <img src="IMAGES/profile.jpg" alt="Nima Shariat Zamanpour" class="profile-photo"> */
+    .profile-photo {
+      display: block;
+      width: 140px;
+      height: 140px;
+      margin: 1.25rem auto 0.75rem;
+      border: 1px solid black;
+      object-fit: cover;
+    }
+    .profile-photo--placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: courier-std, monospace;
+      font-size: 9pt;
+      color: #888;
+      letter-spacing: 0.1em;
+    }
 
-      .my-sidebar {
-        background-color: transparent;
-        padding: 1rem;
-      }
+    /* DROPDOWN — same [+]/[–] pattern, reusable for any future sections */
+    .project {
+      border-top: 1px solid black;
+      padding: 0.4rem 0;
+    }
+    .project:last-of-type { border-bottom: 1px solid black; }
+    .project > summary {
+      cursor: pointer;
+      list-style: none;
+      font-family: courier-std, monospace;
+      font-size: 11pt;
+      padding: 0.2rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+    .project > summary::-webkit-details-marker { display: none; }
+    .project > summary::before {
+      content: "[+]";
+      font-family: courier-std, monospace;
+      width: 1.75rem;
+      display: inline-block;
+    }
+    .project[open] > summary::before { content: "[–]"; }
+    .project-body { padding: 0.5rem 0 0.75rem 0; }
 
-      #carousel {
-        width: 100%;
-        background-color: #676767;
-        overflow-x: auto;
-        white-space: nowrap;
-      }
+    /* FLIPBOOK */
+    .flipbook-wrap {
+      width: 100%;
+      background: #f4f4f4;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+    #flipbook {
+      margin: 0 auto;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      background: #f4f4f4;
+    }
+    .flipbook-status {
+      font-family: courier-std, monospace;
+      font-size: 10pt;
+      text-align: center;
+      padding: 1rem;
+      color: #555;
+    }
 
-      #carousel .slide {
-        display: inline-block;
-      }
+    .flipbook-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.75rem 0 0;
+      font-family: courier-std, monospace;
+      font-size: 10pt;
+    }
+    .flipbook-controls button {
+      font-family: courier-std, monospace;
+      font-size: 10pt;
+      background: white;
+      border: 1px solid black;
+      padding: 0.25rem 0.75rem;
+      cursor: inherit;
+    }
+    .flipbook-controls button:disabled {
+      color: #aaa;
+      border-color: #ccc;
+      cursor: not-allowed;
+    }
+    #flip-page-indicator { min-width: 5.5rem; text-align: center; }
 
-      ::-webkit-scrollbar {
-        height: 10px;
-        width: 5px;
-      }
+    /* footer links: CV / contact */
+    .links {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      padding: 1.25rem 0 2rem;
+      border-top: 1px solid black;
+      margin-top: 1.25rem;
+      font-family: courier-std, monospace;
+      font-size: 11pt;
+    }
 
-      ::-webkit-scrollbar-track {
-        background: white;
-      }
+    /* preserved scrollbar styling */
+    ::-webkit-scrollbar { height: 10px; width: 5px; }
+    ::-webkit-scrollbar-track { background: white; }
+    ::-webkit-scrollbar-thumb { background: #D3D3D3; }
+    ::-webkit-scrollbar-thumb:hover { background: #777; }
 
-      ::-webkit-scrollbar-thumb {
-        background: #D3D3D3;
-      }
+    @media (max-width: 768px) {
+      h1, h2, h3, p { font-size: 90%; }
+      .sticky-header { font-size: 12pt; }
+      .flipbook-wrap { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 
-      ::-webkit-scrollbar-thumb:hover {
-        background: #777;
-      }
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12 my-sidebar">
 
-      .sticky-header {
-        position: sticky;
-        top: 0;
-        background: white;
-        z-index: 10;
-        padding-bottom: 0.5rem;
-      }
+        <!-- PROFILE PHOTO (placeholder — replace this div with <img class="profile-photo" src="IMAGES/profile.jpg" alt="Nima Shariat Zamanpour"> when ready) -->
+        <div class="profile-photo profile-photo--placeholder">[ PHOTO ]</div>
 
-      @media (max-width: 768px) {
-        h1, h2, h3, p {
-          font-size: 90%;
-        }
-
-        .sticky-header {
-          font-size: 12pt;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12 my-sidebar">
-          <div class="sticky-header text-center">
-            <h3>
-              <div class="text-nowrap">NIMA SHARIAT ZAMANPOUR</div>
-            </h3>
-          </div>
-
-          <h1>ABOUT</h1>
-          <p>
-            <br>
-            &#9;
-            Nima Shariat Zamanpour is an architect, artist and educator based in New York City. 
-            He currently serves as a project manager at the Metropilitan Museum of Art and is the co-founder of TULPA, a research & consulting group that explores the connections between architecture, language, craft, and technology. 
-            Nima earned his Master of Architecture from the Harvard Graduate School of Design and holds Bachelors' degrees in Computer Science, Economics, and Art from UC Santa Cruz. He has taught at Yale, RISD, the BAC, and Wentworth, and has guest lectured at Harvard and UWM. 
-            <br><br>
-            &#9;
-            Nima's research interests encompass computational graphics, AI, urban planning, survivalism, simulations, the occult and Science and Technology Studies (STS). 
-            <br><br>
-          </p>
+        <!-- NAME -->
+        <div class="sticky-header">
+          <h3><div class="text-nowrap">NIMA SHARIAT ZAMANPOUR</div></h3>
         </div>
+
+        <!-- BIO -->
+        <h1>ABOUT</h1>
+        <p>
+          <br>&#9;
+          Nima Shariat Zamanpour is an architect, artist and educator based in New York City.
+          He currently serves as a project manager at the Metropolitan Museum of Art and is the co-founder of TULPA, a research &amp; consulting group that explores the connections between architecture, language, craft, and technology.
+          Nima earned his Master of Architecture from the Harvard Graduate School of Design and holds Bachelors' degrees in Computer Science, Economics, and Art from UC Santa Cruz. He has taught at Yale, RISD, the BAC, and Wentworth, and has guest lectured at Harvard and UWM.
+          <br><br>&#9;
+          Nima's research interests encompass computational graphics, AI, urban planning, survivalism, simulations, the occult and Science and Technology Studies (STS).
+          <br><br>
+        </p>
+
+        <!-- PORTFOLIO -->
+        <h1>PORTFOLIO</h1>
+        <details class="project" id="portfolio-details">
+          <summary>NIMA SHARIAT ZAMANPOUR — PORTFOLIO</summary>
+          <div class="project-body">
+            <div class="flipbook-wrap">
+              <div id="flipbook-status" class="flipbook-status">loading portfolio…</div>
+              <div id="flipbook"></div>
+            </div>
+            <div class="flipbook-controls">
+              <button id="flip-prev" type="button" disabled>◀ PREV</button>
+              <span id="flip-page-indicator">– / –</span>
+              <button id="flip-next" type="button" disabled>NEXT ▶</button>
+            </div>
+          </div>
+        </details>
+
+        <!-- LINKS -->
+        <nav class="links">
+          <a href="20260509_CV_NShariat.pdf" target="_blank" rel="noopener">CV</a>
+          <a href="mailto:nszamanpour@gmail.com">CONTACT</a>
+        </nav>
+
       </div>
     </div>
-  </body>
+  </div>
+
+  <script>
+    // ============================================================
+    // PORTFOLIO CONFIG
+    // ------------------------------------------------------------
+    // Update this filename/path to match the PDF in your repo.
+    // e.g. "PORTFOLIO.pdf"  or  "PDF/nima_portfolio_2025.pdf"
+    // ============================================================
+    const PORTFOLIO_PDF = "20250701_Portfolio_Medium_S_S_e1.pdf";
+
+    // ============================================================
+    // FLIPBOOK — lazy-initialized when the dropdown is first opened
+    // so the page stays light until someone actually wants it.
+    // ============================================================
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+    const detailsEl   = document.getElementById("portfolio-details");
+    const flipbookEl  = document.getElementById("flipbook");
+    const statusEl    = document.getElementById("flipbook-status");
+    const prevBtn     = document.getElementById("flip-prev");
+    const nextBtn     = document.getElementById("flip-next");
+    const indicatorEl = document.getElementById("flip-page-indicator");
+
+    let pageFlipInstance = null;
+    let initStarted      = false;
+
+    detailsEl.addEventListener("toggle", () => {
+      if (detailsEl.open && !initStarted) {
+        initStarted = true;
+        initFlipbook(PORTFOLIO_PDF).catch(err => {
+          console.error(err);
+          statusEl.textContent = "could not load portfolio: " + err.message;
+        });
+      }
+    });
+
+    async function initFlipbook(url) {
+      statusEl.style.display = "block";
+      statusEl.textContent = "loading portfolio…";
+
+      // 1. fetch the PDF
+      const pdf = await pdfjsLib.getDocument(url).promise;
+      const numPages = pdf.numPages;
+
+      // 2. determine aspect from first page
+      const firstPage = await pdf.getPage(1);
+      const baseViewport = firstPage.getViewport({ scale: 1 });
+      const aspect = baseViewport.width / baseViewport.height;
+
+      // 3. pick render scale for crisp pages
+      const targetWidth = 900;
+      const renderScale = targetWidth / baseViewport.width;
+
+      // 4. render every page to a JPEG data URL
+      const pageImages = [];
+      for (let i = 1; i <= numPages; i++) {
+        statusEl.textContent = `rendering page ${i} / ${numPages}…`;
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: renderScale });
+        const canvas = document.createElement("canvas");
+        canvas.width  = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({
+          canvasContext: canvas.getContext("2d"),
+          viewport: viewport
+        }).promise;
+        pageImages.push(canvas.toDataURL("image/jpeg", 0.85));
+      }
+
+      // 5. compute display size for the book
+      const wrapWidth = flipbookEl.parentElement.clientWidth - 32;
+      const maxSpreadW = Math.min(wrapWidth, 1100);
+      const pageW = Math.floor(maxSpreadW / 2);
+      const pageH = Math.floor(pageW / aspect);
+
+      // 6. init StPageFlip
+      pageFlipInstance = new St.PageFlip(flipbookEl, {
+        width: pageW,
+        height: pageH,
+        size: "stretch",
+        minWidth: 280,
+        maxWidth: 700,
+        minHeight: Math.floor(280 / aspect),
+        maxHeight: Math.floor(700 / aspect),
+        showCover: true,         // first page sits alone like a real cover
+        usePortrait: true,       // auto single-page on narrow screens
+        autoSize: true,
+        maxShadowOpacity: 0.4,
+        mobileScrollSupport: true,
+        drawShadow: true
+      });
+      pageFlipInstance.loadFromImages(pageImages);
+
+      // 7. wire up controls + page indicator
+      const totalPages = pageFlipInstance.getPageCount();
+      const updateIndicator = () => {
+        const idx = pageFlipInstance.getCurrentPageIndex();
+        indicatorEl.textContent = (idx + 1) + " / " + totalPages;
+        prevBtn.disabled = idx <= 0;
+        nextBtn.disabled = idx >= totalPages - 1;
+      };
+      pageFlipInstance.on("flip", updateIndicator);
+      updateIndicator();
+
+      prevBtn.addEventListener("click", () => pageFlipInstance.flipPrev());
+      nextBtn.addEventListener("click", () => pageFlipInstance.flipNext());
+
+      // arrow-key nav while the dropdown is open
+      document.addEventListener("keydown", e => {
+        if (!detailsEl.open) return;
+        if (e.key === "ArrowLeft")  pageFlipInstance.flipPrev();
+        if (e.key === "ArrowRight") pageFlipInstance.flipNext();
+      });
+
+      statusEl.style.display = "none";
+    }
+  </script>
+</body>
 </html>
