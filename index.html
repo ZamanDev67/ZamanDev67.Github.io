@@ -7,20 +7,20 @@
   <link rel="stylesheet" href="https://use.typekit.net/ivv2sgr.css">
   <title>nima shariat zamanpour</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
- 
+
   <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
- 
+
   <style>
     @import url("https://use.typekit.net/ivv2sgr.css");
- 
+
     body {
       font-family: courier-std, monospace;
       cursor: url("MAIN/CURSOR/20221019_autocadcursor_p_15px_02.png") 7 7, default;
       margin: 0;
       padding: 0;
     }
- 
+
     h1 {
       font-family: courier-std, monospace;
       text-decoration: underline;
@@ -43,14 +43,14 @@
       font-weight: 400;
       font-style: normal;
     }
- 
+
     .my-sidebar {
       background-color: transparent;
       padding: 1rem;
       max-width: 980px;
       margin: 0 auto;
     }
- 
+
     .sticky-header {
       position: sticky;
       top: 0;
@@ -58,28 +58,29 @@
       z-index: 10;
       padding: 0.75rem 0 0.5rem;
     }
- 
-    /* profile photo placeholder.
-       to swap in a real photo, replace the <div class="profile-photo"> block with:
-       <img src="IMAGES/profile.jpg" alt="Nima Shariat Zamanpour" class="profile-photo"> */
+
+    /* profile photo — shows Normal, crossfades to Depth on hover */
     .profile-photo {
       display: block;
       width: 140px;
       height: 140px;
       margin: 1.25rem auto 0.75rem;
       border: 1px solid black;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-photo .profile-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
+      display: block;
+      transition: opacity 280ms ease;
     }
-    .profile-photo--placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: courier-std, monospace;
-      font-size: 9pt;
-      color: #888;
-      letter-spacing: 0.1em;
-    }
- 
+    .profile-photo .profile-img--hover { opacity: 0; }
+    .profile-photo:hover .profile-img--hover { opacity: 1; }
+
     /* DROPDOWN */
     .project {
       border-top: 1px solid black;
@@ -106,11 +107,11 @@
     }
     .project[open] > summary::before { content: "[–]"; }
     .project-body { padding: 0.5rem 0 0.75rem 0; }
- 
+
     /* ============================================================
        PORTFOLIO CAROUSEL  —  facing-pages baseline view
        ============================================================ */
- 
+
     .carousel-stage {
       position: relative;
       width: 100%;
@@ -118,7 +119,7 @@
       padding: 1.5rem 0.5rem 0.75rem;
       box-sizing: border-box;
     }
- 
+
     .carousel-spread {
       display: flex;
       justify-content: center;
@@ -134,16 +135,12 @@
       max-width: 700px;
       justify-content: center;
     }
- 
+
     .carousel-page {
       flex: 1 1 0;
       min-width: 0;
       cursor: zoom-in;
       transition: opacity 150ms ease;
-    }
-    .carousel-spread.is-cover .carousel-page {
-      flex: 0 0 auto;
-      max-width: 100%;
     }
     .carousel-page img {
       display: block;
@@ -151,7 +148,7 @@
       height: auto;
     }
     .carousel-page:hover img { opacity: 0.92; }
- 
+
     /* loading state */
     .carousel-status {
       font-family: courier-std, monospace;
@@ -178,7 +175,7 @@
       background: #111;
       transition: width 180ms ease;
     }
- 
+
     /* control bar */
     .carousel-controls {
       display: flex;
@@ -230,11 +227,11 @@
       text-align: center;
       padding-top: 0.4rem;
     }
- 
+
     /* ============================================================
        LIGHTBOX  —  single sheet at full resolution
        ============================================================ */
- 
+
     .lightbox {
       position: fixed;
       inset: 0;
@@ -249,7 +246,7 @@
     }
     .lightbox.is-open { display: flex; }
     body.lightbox-locked { overflow: hidden; }
- 
+
     .lightbox img {
       max-width: 100%;
       max-height: 100%;
@@ -257,7 +254,7 @@
       cursor: default;
       user-select: none;
     }
- 
+
     .lightbox-close {
       position: absolute;
       top: 1.1rem;
@@ -278,7 +275,7 @@
       stroke: currentColor; fill: none; stroke-width: 1.4;
     }
     .lightbox-close:hover { color: #000; }
- 
+
     .lightbox-nav {
       position: absolute;
       top: 50%;
@@ -303,7 +300,7 @@
       width: 28px; height: 28px;
       stroke: currentColor; fill: none; stroke-width: 1.2;
     }
- 
+
     .lightbox-indicator {
       position: absolute;
       bottom: 1.25rem;
@@ -322,7 +319,7 @@
       margin: 0 0.4em;
       color: #bbb;
     }
- 
+
     .lightbox-status {
       position: absolute;
       top: 1.25rem;
@@ -338,7 +335,7 @@
       transition: opacity 200ms ease;
     }
     .lightbox-status.is-active { opacity: 1; }
- 
+
     /* footer links */
     .links {
       display: flex;
@@ -350,13 +347,13 @@
       font-family: courier-std, monospace;
       font-size: 11pt;
     }
- 
+
     /* preserved scrollbar styling */
     ::-webkit-scrollbar { height: 10px; width: 5px; }
     ::-webkit-scrollbar-track { background: white; }
     ::-webkit-scrollbar-thumb { background: #D3D3D3; }
     ::-webkit-scrollbar-thumb:hover { background: #777; }
- 
+
     @media (max-width: 768px) {
       h1, h2, h3, p { font-size: 90%; }
       .sticky-header { font-size: 12pt; }
@@ -371,19 +368,22 @@
 </head>
 <body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
- 
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 my-sidebar">
- 
-        <!-- PROFILE PHOTO (placeholder — replace this div with <img class="profile-photo" src="IMAGES/profile.jpg" alt="Nima Shariat Zamanpour"> when ready) -->
-        <div class="profile-photo profile-photo--placeholder">[ PHOTO ]</div>
- 
+
+        <!-- PROFILE PHOTO (hover-swap: Normal → Depth) -->
+        <div class="profile-photo">
+          <img src="profilephotoNormal.png" alt="Nima Shariat Zamanpour" class="profile-img profile-img--default">
+          <img src="profilephotoDepth.png" alt="" aria-hidden="true" class="profile-img profile-img--hover">
+        </div>
+
         <!-- NAME -->
         <div class="sticky-header">
           <h3><div class="text-nowrap">NIMA SHARIAT ZAMANPOUR</div></h3>
         </div>
- 
+
         <!-- BIO -->
         <h1>ABOUT</h1>
         <p>
@@ -395,44 +395,44 @@
           Nima's research interests encompass computational graphics, AI, urban planning, survivalism, simulations, the occult and Science and Technology Studies (STS).
           <br><br>
         </p>
- 
+
         <!-- PORTFOLIO -->
         <h1>PORTFOLIO</h1>
         <details class="project" id="portfolio-details">
           <summary>NIMA SHARIAT ZAMANPOUR — PORTFOLIO</summary>
           <div class="project-body">
             <div class="carousel-stage" id="carousel-stage">
- 
+
               <div id="carousel-status" class="carousel-status">
                 <span id="carousel-status-text">loading portfolio</span>
                 <span class="carousel-progress"><span id="carousel-progress-bar"></span></span>
               </div>
- 
+
               <!-- spread container (1 page on cover, 2 pages otherwise) -->
               <div class="carousel-spread" id="carousel-spread"></div>
- 
+
               <div class="carousel-controls">
                 <button id="carousel-prev" type="button" disabled aria-label="Previous spread">← Prev</button>
                 <span id="carousel-indicator">— <span class="sep">/</span> —</span>
                 <button id="carousel-next" type="button" disabled aria-label="Next spread">Next →</button>
               </div>
- 
+
               <div class="carousel-hint">click any sheet to enlarge</div>
- 
+
             </div>
           </div>
         </details>
- 
+
         <!-- LINKS -->
         <nav class="links">
           <a href="20260509_CV_NShariat.pdf" target="_blank" rel="noopener">CV</a>
           <a href="mailto:nszamanpour@gmail.com">CONTACT</a>
         </nav>
- 
+
       </div>
     </div>
   </div>
- 
+
   <!-- LIGHTBOX (single sheet at full resolution) -->
   <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Portfolio sheet">
     <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close">
@@ -454,13 +454,13 @@
     <img id="lightbox-image" src="" alt="">
     <span class="lightbox-indicator" id="lightbox-indicator">— <span class="sep">/</span> —</span>
   </div>
- 
+
   <script>
     // ============================================================
     // PORTFOLIO CONFIG
     // ============================================================
     const PORTFOLIO_PDF = "20250701_Portfolio_Medium_S_S_e1.pdf";
- 
+
     // CAROUSEL_RES: per-page render width for the embedded carousel.
     //   Bigger than the carousel actually displays, so it stays
     //   crisp on retina screens.
@@ -472,13 +472,13 @@
     const CAROUSEL_RES         = 2200;
     const LIGHTBOX_RES         = 4000;
     const LIGHTBOX_RES_FALLBACK = 3000;
- 
+
     // ============================================================
     // SETUP
     // ============================================================
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
- 
+
     const detailsEl       = document.getElementById("portfolio-details");
     const stageEl         = document.getElementById("carousel-stage");
     const spreadEl        = document.getElementById("carousel-spread");
@@ -488,7 +488,7 @@
     const prevBtn         = document.getElementById("carousel-prev");
     const nextBtn         = document.getElementById("carousel-next");
     const indicatorEl     = document.getElementById("carousel-indicator");
- 
+
     const lightboxEl      = document.getElementById("lightbox");
     const lightboxImg     = document.getElementById("lightbox-image");
     const lightboxClose   = document.getElementById("lightbox-close");
@@ -496,7 +496,7 @@
     const lightboxNextBtn = document.getElementById("lightbox-next");
     const lightboxIndic   = document.getElementById("lightbox-indicator");
     const lightboxStatus  = document.getElementById("lightbox-status");
- 
+
     let pdfDocument        = null;
     let numPages           = 0;
     let carouselImages     = [];   // pageIdx (0-based) -> data URL (carousel res)
@@ -506,7 +506,7 @@
     let currentLightboxPage = -1;
     let initStarted        = false;
     let renderToken        = 0;    // increments to cancel stale lightbox renders
- 
+
     // ============================================================
     // INITIALIZATION (lazy on first dropdown open)
     // ============================================================
@@ -519,15 +519,15 @@
         });
       }
     });
- 
+
     async function initCarousel(url) {
       statusEl.style.display = "block";
       statusTxt.textContent  = "loading portfolio";
       progressBar.style.width = "0%";
- 
+
       pdfDocument = await pdfjsLib.getDocument(url).promise;
       numPages = pdfDocument.numPages;
- 
+
       // render every page at carousel resolution
       for (let i = 1; i <= numPages; i++) {
         statusTxt.textContent = `rendering ${i} of ${numPages}`;
@@ -535,16 +535,16 @@
         carouselImages.push(await renderPageDataURL(i, CAROUSEL_RES, 0.92));
       }
       progressBar.style.width = "100%";
- 
+
       // build spread layout: cover alone, then real spreads
       spreads = computeSpreads(numPages);
- 
+
       // wire up controls
       prevBtn.disabled = false;
       nextBtn.disabled = false;
       prevBtn.addEventListener("click", goPrev);
       nextBtn.addEventListener("click", goNext);
- 
+
       // lightbox controls
       lightboxClose.addEventListener("click", closeLightbox);
       lightboxPrevBtn.addEventListener("click", e => {
@@ -559,14 +559,14 @@
       lightboxEl.addEventListener("click", e => {
         if (e.target === lightboxEl) closeLightbox();
       });
- 
+
       // hide loading UI
       statusEl.style.display = "none";
- 
+
       // show first spread
       showSpread(0);
     }
- 
+
     // ============================================================
     // SPREAD COMPUTATION
     // Cover page (index 0) sits alone, then real facing spreads.
@@ -581,14 +581,14 @@
       }
       return out;
     }
- 
+
     // ============================================================
     // CAROUSEL NAVIGATION
     // ============================================================
     function showSpread(idx) {
       if (idx < 0 || idx >= spreads.length) return;
       currentSpread = idx;
- 
+
       // brief fade so transition feels intentional
       spreadEl.classList.add("is-fading");
       setTimeout(() => {
@@ -605,13 +605,13 @@
         });
         spreadEl.classList.remove("is-fading");
       }, 200);
- 
+
       updateIndicator();
     }
- 
+
     function goPrev() { if (currentSpread > 0) showSpread(currentSpread - 1); }
     function goNext() { if (currentSpread < spreads.length - 1) showSpread(currentSpread + 1); }
- 
+
     function updateIndicator() {
       const pages = spreads[currentSpread];
       const label = pages.length === 1
@@ -621,7 +621,7 @@
       prevBtn.disabled = currentSpread <= 0;
       nextBtn.disabled = currentSpread >= spreads.length - 1;
     }
- 
+
     // ============================================================
     // LIGHTBOX
     //   opens immediately with the carousel-res image (instant),
@@ -635,7 +635,7 @@
       document.body.classList.add("lightbox-locked");
       gotoLightboxPage(pageIdx);
     }
- 
+
     function closeLightbox() {
       lightboxEl.classList.remove("is-open");
       lightboxEl.setAttribute("aria-hidden", "true");
@@ -643,29 +643,29 @@
       lightboxStatus.classList.remove("is-active");
       currentLightboxPage = -1;
     }
- 
+
     async function gotoLightboxPage(pageIdx) {
       if (pageIdx < 0 || pageIdx >= numPages) return;
       currentLightboxPage = pageIdx;
       const myToken = ++renderToken;
- 
+
       // show carousel-res image immediately as a placeholder
       lightboxImg.src = carouselImages[pageIdx];
       lightboxIndic.innerHTML = (pageIdx + 1) + ' <span class="sep">/</span> ' + numPages;
       lightboxPrevBtn.disabled = pageIdx <= 0;
       lightboxNextBtn.disabled = pageIdx >= numPages - 1;
- 
+
       // already cached at hi-res?
       if (highResCache[pageIdx]) {
         lightboxImg.src = highResCache[pageIdx];
         lightboxStatus.classList.remove("is-active");
         return;
       }
- 
+
       // render fresh at hi-res
       lightboxStatus.textContent = "loading hi-res";
       lightboxStatus.classList.add("is-active");
- 
+
       let dataUrl = null;
       try {
         dataUrl = await renderPageDataURL(pageIdx + 1, LIGHTBOX_RES, 0.95);
@@ -677,10 +677,10 @@
           console.warn("fallback also failed", err2);
         }
       }
- 
+
       // bail if user navigated away while we rendered
       if (myToken !== renderToken) return;
- 
+
       if (dataUrl) {
         highResCache[pageIdx] = dataUrl;
         if (currentLightboxPage === pageIdx) {
@@ -689,7 +689,7 @@
       }
       lightboxStatus.classList.remove("is-active");
     }
- 
+
     // ============================================================
     // PDF.js page rendering helper
     // ============================================================
@@ -711,7 +711,7 @@
       canvas.height = 0;
       return url;
     }
- 
+
     // ============================================================
     // KEYBOARD
     //   Lightbox open: ←/→ step pages, Esc closes
