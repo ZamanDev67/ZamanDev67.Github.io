@@ -1,6 +1,3 @@
-Index · HTML
-Copy
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,10 +8,8 @@ Copy
   <title>nima shariat zamanpour</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
  
-  <!-- PDF.js (renders PDF pages to canvas) -->
+  <!-- PDF.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <!-- StPageFlip (book-like page flip UI) -->
-  <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
  
   <style>
     @import url("https://use.typekit.net/ivv2sgr.css");
@@ -113,52 +108,61 @@ Copy
     .project-body { padding: 0.5rem 0 0.75rem 0; }
  
     /* ============================================================
-       PORTFOLIO VIEWER  —  contemporary, gallery-like presentation
+       PORTFOLIO CAROUSEL  —  facing-pages baseline view
        ============================================================ */
  
-    .flipbook-wrap {
+    .carousel-stage {
       position: relative;
       width: 100%;
       background: #ffffff;
-      padding: 2.25rem 1rem 1rem;
+      padding: 1.5rem 0.5rem 0.75rem;
       box-sizing: border-box;
-      transition: padding 220ms ease;
     }
  
-    #flipbook {
+    .carousel-spread {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2px;
       margin: 0 auto;
-      background: transparent;
+      width: 100%;
+      max-width: 1400px;
+      transition: opacity 200ms ease;
+    }
+    .carousel-spread.is-fading { opacity: 0; }
+    .carousel-spread.is-cover {
+      max-width: 700px;
+      justify-content: center;
     }
  
-    /* kill StPageFlip's flip-shadow gradients so pages stay true to PDF color */
-    #flipbook .stf__shadow,
-    #flipbook .stf__hardShadow,
-    #flipbook .stf__outerShadow,
-    #flipbook [class*="hadow"] {
-      display: none !important;
-      opacity: 0 !important;
+    .carousel-page {
+      flex: 1 1 0;
+      min-width: 0;
+      cursor: zoom-in;
+      transition: opacity 150ms ease;
     }
-    #flipbook .stf__block,
-    #flipbook .stf__item,
-    #flipbook .stf__page,
-    #flipbook canvas,
-    #flipbook img {
-      box-shadow: none !important;
-      filter: none !important;
-      border-radius: 0 !important;
+    .carousel-spread.is-cover .carousel-page {
+      flex: 0 0 auto;
+      max-width: 100%;
     }
+    .carousel-page img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .carousel-page:hover img { opacity: 0.92; }
  
-    /* loading state (initial render) */
-    .flipbook-status {
+    /* loading state */
+    .carousel-status {
       font-family: courier-std, monospace;
       font-size: 9pt;
       letter-spacing: 0.15em;
       text-transform: uppercase;
       text-align: center;
-      padding: 1rem 0;
+      padding: 1.5rem 0;
       color: #888;
     }
-    .flipbook-progress {
+    .carousel-progress {
       display: block;
       height: 1px;
       width: 100%;
@@ -167,7 +171,7 @@ Copy
       background: #eee;
       overflow: hidden;
     }
-    .flipbook-progress span {
+    .carousel-progress span {
       display: block;
       height: 100%;
       width: 0;
@@ -175,38 +179,20 @@ Copy
       transition: width 180ms ease;
     }
  
-    /* hi-res upgrade indicator (only visible in fullscreen while upgrading) */
-    .flipbook-hires-status {
-      position: absolute;
-      top: 1.1rem;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: courier-std, monospace;
-      font-size: 8pt;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #999;
-      pointer-events: none;
-      display: none;
-    }
-    .flipbook-wrap.is-expanded .flipbook-hires-status.is-active {
-      display: block;
-    }
- 
     /* control bar */
-    .flipbook-controls {
+    .carousel-controls {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 1.75rem;
-      padding: 1.25rem 0 0.5rem;
+      padding: 1rem 0 0.25rem;
       font-family: courier-std, monospace;
       font-size: 9pt;
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: #1a1a1a;
     }
-    .flipbook-controls button {
+    .carousel-controls button {
       font: inherit;
       letter-spacing: inherit;
       text-transform: inherit;
@@ -215,42 +201,27 @@ Copy
       border: 0;
       padding: 0.25rem 0.1rem;
       cursor: inherit;
-      position: relative;
     }
-    .flipbook-controls button:not(:disabled):hover {
+    .carousel-controls button:not(:disabled):hover {
       text-decoration: underline;
       text-underline-offset: 4px;
     }
-    .flipbook-controls button:disabled {
+    .carousel-controls button:disabled {
       color: #c8c8c8;
       cursor: not-allowed;
     }
-    .flipbook-controls button.icon {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-    .flipbook-controls .icon svg {
-      width: 13px;
-      height: 13px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 1.4;
-    }
- 
-    #flip-page-indicator {
-      min-width: 4.5rem;
+    #carousel-indicator {
+      min-width: 5.5rem;
       text-align: center;
       font-feature-settings: "tnum" 1;
       color: #555;
     }
-    #flip-page-indicator .sep {
+    #carousel-indicator .sep {
       display: inline-block;
       margin: 0 0.4em;
       color: #aaa;
     }
- 
-    .flipbook-hint {
+    .carousel-hint {
       font-family: courier-std, monospace;
       font-size: 8pt;
       letter-spacing: 0.18em;
@@ -258,38 +229,42 @@ Copy
       color: #b0b0b0;
       text-align: center;
       padding-top: 0.4rem;
-      transition: opacity 200ms ease;
     }
  
-    /* FULLSCREEN — CSS-driven overlay */
-    .flipbook-wrap.is-expanded {
+    /* ============================================================
+       LIGHTBOX  —  single sheet at full resolution
+       ============================================================ */
+ 
+    .lightbox {
       position: fixed;
       inset: 0;
       z-index: 9999;
-      display: flex;
-      flex-direction: column;
+      background: #ffffff;
+      display: none;
       align-items: center;
       justify-content: center;
-      background: #ffffff;
-      padding: 3rem 2rem 2rem;
+      padding: 3rem 4rem 4rem;
+      box-sizing: border-box;
       cursor: zoom-out;
     }
-    .flipbook-wrap.is-expanded #flipbook {
-      cursor: inherit;
-    }
-    .flipbook-wrap.is-expanded .flipbook-hint { display: none; }
-    .flipbook-wrap.is-expanded .flipbook-controls {
-      padding-top: 1.5rem;
-    }
-    body.flipbook-locked { overflow: hidden; }
+    .lightbox.is-open { display: flex; }
+    body.lightbox-locked { overflow: hidden; }
  
-    .flipbook-close {
+    .lightbox img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      cursor: default;
+      user-select: none;
+    }
+ 
+    .lightbox-close {
       position: absolute;
       top: 1.1rem;
       right: 1.25rem;
-      width: 28px;
-      height: 28px;
-      display: none;
+      width: 32px;
+      height: 32px;
+      display: flex;
       align-items: center;
       justify-content: center;
       background: transparent;
@@ -298,17 +273,71 @@ Copy
       cursor: inherit;
       color: #1a1a1a;
     }
-    .flipbook-close svg {
-      width: 16px;
-      height: 16px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 1.4;
+    .lightbox-close svg {
+      width: 18px; height: 18px;
+      stroke: currentColor; fill: none; stroke-width: 1.4;
     }
-    .flipbook-close:hover { color: #000; }
-    .flipbook-wrap.is-expanded .flipbook-close { display: inline-flex; }
-    .flipbook-wrap.is-expanded .flipbook-expand-btn { display: none; }
-    .flipbook-wrap:not(.is-expanded) #flipbook { cursor: zoom-in; }
+    .lightbox-close:hover { color: #000; }
+ 
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      color: #888;
+      cursor: inherit;
+      transition: color 150ms ease;
+    }
+    .lightbox-nav:hover:not(:disabled) { color: #000; }
+    .lightbox-nav:disabled { color: #ddd; cursor: not-allowed; }
+    .lightbox-nav.prev { left: 0.75rem; }
+    .lightbox-nav.next { right: 0.75rem; }
+    .lightbox-nav svg {
+      width: 28px; height: 28px;
+      stroke: currentColor; fill: none; stroke-width: 1.2;
+    }
+ 
+    .lightbox-indicator {
+      position: absolute;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: courier-std, monospace;
+      font-size: 9pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #777;
+      font-feature-settings: "tnum" 1;
+      pointer-events: none;
+    }
+    .lightbox-indicator .sep {
+      display: inline-block;
+      margin: 0 0.4em;
+      color: #bbb;
+    }
+ 
+    .lightbox-status {
+      position: absolute;
+      top: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: courier-std, monospace;
+      font-size: 8pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 200ms ease;
+    }
+    .lightbox-status.is-active { opacity: 1; }
  
     /* footer links */
     .links {
@@ -331,9 +360,12 @@ Copy
     @media (max-width: 768px) {
       h1, h2, h3, p { font-size: 90%; }
       .sticky-header { font-size: 12pt; }
-      .flipbook-wrap { padding: 1.25rem 0.5rem 0.75rem; }
-      .flipbook-wrap.is-expanded { padding: 2.5rem 0.5rem 1rem; }
-      .flipbook-controls { gap: 1rem; }
+      .carousel-stage { padding: 0.75rem 0.25rem 0.5rem; }
+      .carousel-controls { gap: 1rem; }
+      .lightbox { padding: 3rem 0.75rem 3rem; }
+      .lightbox-nav { width: 40px; height: 40px; }
+      .lightbox-nav.prev { left: 0.25rem; }
+      .lightbox-nav.next { right: 0.25rem; }
     }
   </style>
 </head>
@@ -369,38 +401,23 @@ Copy
         <details class="project" id="portfolio-details">
           <summary>NIMA SHARIAT ZAMANPOUR — PORTFOLIO</summary>
           <div class="project-body">
-            <div class="flipbook-wrap" id="flipbook-wrap">
+            <div class="carousel-stage" id="carousel-stage">
  
-              <!-- close button (only visible in fullscreen) -->
-              <button class="flipbook-close" id="flipbook-close" type="button" aria-label="Close fullscreen">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M5 5 L19 19 M19 5 L5 19" stroke-linecap="round"/>
-                </svg>
-              </button>
- 
-              <!-- hi-res upgrade indicator (only visible in fullscreen while upgrading) -->
-              <div class="flipbook-hires-status" id="flipbook-hires-status">loading hi-res</div>
- 
-              <div id="flipbook-status" class="flipbook-status">
-                <span id="flipbook-status-text">loading portfolio</span>
-                <span class="flipbook-progress"><span id="flipbook-progress-bar"></span></span>
+              <div id="carousel-status" class="carousel-status">
+                <span id="carousel-status-text">loading portfolio</span>
+                <span class="carousel-progress"><span id="carousel-progress-bar"></span></span>
               </div>
  
-              <div id="flipbook"></div>
+              <!-- spread container (1 page on cover, 2 pages otherwise) -->
+              <div class="carousel-spread" id="carousel-spread"></div>
  
-              <div class="flipbook-hint" id="flipbook-hint">click to expand · drag pages or use arrows to flip</div>
- 
-              <div class="flipbook-controls">
-                <button id="flip-prev" type="button" disabled aria-label="Previous page">← Prev</button>
-                <span id="flip-page-indicator">— <span class="sep">/</span> —</span>
-                <button id="flip-next" type="button" disabled aria-label="Next page">Next →</button>
-                <button id="flipbook-expand" class="icon flipbook-expand-btn" type="button" aria-label="Expand portfolio">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M4 9 V4 H9 M20 9 V4 H15 M4 15 V20 H9 M20 15 V20 H15" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  Expand
-                </button>
+              <div class="carousel-controls">
+                <button id="carousel-prev" type="button" disabled aria-label="Previous spread">← Prev</button>
+                <span id="carousel-indicator">— <span class="sep">/</span> —</span>
+                <button id="carousel-next" type="button" disabled aria-label="Next spread">Next →</button>
               </div>
+ 
+              <div class="carousel-hint">click any sheet to enlarge</div>
  
             </div>
           </div>
@@ -416,275 +433,302 @@ Copy
     </div>
   </div>
  
+  <!-- LIGHTBOX (single sheet at full resolution) -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Portfolio sheet">
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 5 L19 19 M19 5 L5 19" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button class="lightbox-nav prev" id="lightbox-prev" type="button" aria-label="Previous sheet">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15 5 L7 12 L15 19" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </button>
+    <button class="lightbox-nav next" id="lightbox-next" type="button" aria-label="Next sheet">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 5 L17 12 L9 19" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+    </button>
+    <span class="lightbox-status" id="lightbox-status">loading hi-res</span>
+    <img id="lightbox-image" src="" alt="">
+    <span class="lightbox-indicator" id="lightbox-indicator">— <span class="sep">/</span> —</span>
+  </div>
+ 
   <script>
     // ============================================================
     // PORTFOLIO CONFIG
     // ============================================================
     const PORTFOLIO_PDF = "20250701_Portfolio_Medium_S_S_e1.pdf";
  
-    // RES_NORMAL: render width per page used for the initial book load.
-    //   High enough to look crisp embedded; low enough to load fast.
-    // RES_HIGH:   second-pass render width loaded silently in the
-    //   background. Pages hot-swap to this when ready, so anything
-    //   you do (including expanding) gets the higher quality.
-    // RES_HIGH_FALLBACK: used if the browser refuses RES_HIGH (mobile
-    //   canvas limits, etc.) — still better than RES_NORMAL.
-    const RES_NORMAL        = 2600;
-    const RES_HIGH          = 3800;
-    const RES_HIGH_FALLBACK = 3000;
+    // CAROUSEL_RES: per-page render width for the embedded carousel.
+    //   Bigger than the carousel actually displays, so it stays
+    //   crisp on retina screens.
+    // LIGHTBOX_RES: per-page render width when a sheet is opened
+    //   in the lightbox — rendered fresh from the PDF on demand
+    //   for the highest quality.
+    // LIGHTBOX_RES_FALLBACK: used if a browser refuses LIGHTBOX_RES
+    //   (mobile canvas size limits, etc.).
+    const CAROUSEL_RES         = 2200;
+    const LIGHTBOX_RES         = 4000;
+    const LIGHTBOX_RES_FALLBACK = 3000;
  
     // ============================================================
-    // FLIPBOOK
+    // SETUP
     // ============================================================
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
  
-    const detailsEl    = document.getElementById("portfolio-details");
-    const wrapEl       = document.getElementById("flipbook-wrap");
-    const flipbookEl   = document.getElementById("flipbook");
-    const statusEl     = document.getElementById("flipbook-status");
-    const statusTxt    = document.getElementById("flipbook-status-text");
-    const progressBar  = document.getElementById("flipbook-progress-bar");
-    const hiresStatus  = document.getElementById("flipbook-hires-status");
-    const prevBtn      = document.getElementById("flip-prev");
-    const nextBtn      = document.getElementById("flip-next");
-    const expandBtn    = document.getElementById("flipbook-expand");
-    const closeBtn     = document.getElementById("flipbook-close");
-    const indicatorEl  = document.getElementById("flip-page-indicator");
+    const detailsEl       = document.getElementById("portfolio-details");
+    const stageEl         = document.getElementById("carousel-stage");
+    const spreadEl        = document.getElementById("carousel-spread");
+    const statusEl        = document.getElementById("carousel-status");
+    const statusTxt       = document.getElementById("carousel-status-text");
+    const progressBar     = document.getElementById("carousel-progress-bar");
+    const prevBtn         = document.getElementById("carousel-prev");
+    const nextBtn         = document.getElementById("carousel-next");
+    const indicatorEl     = document.getElementById("carousel-indicator");
  
-    let pdfDocument      = null;
-    let pageFlipInstance = null;
-    let initStarted      = false;
-    let isExpanded       = false;
-    let isHighRes        = false;   // have we swapped in hi-res?
-    let highResUpgrading = false;   // is a hi-res render in progress?
+    const lightboxEl      = document.getElementById("lightbox");
+    const lightboxImg     = document.getElementById("lightbox-image");
+    const lightboxClose   = document.getElementById("lightbox-close");
+    const lightboxPrevBtn = document.getElementById("lightbox-prev");
+    const lightboxNextBtn = document.getElementById("lightbox-next");
+    const lightboxIndic   = document.getElementById("lightbox-indicator");
+    const lightboxStatus  = document.getElementById("lightbox-status");
  
+    let pdfDocument        = null;
+    let numPages           = 0;
+    let carouselImages     = [];   // pageIdx (0-based) -> data URL (carousel res)
+    let highResCache       = {};   // pageIdx -> data URL (lightbox res), lazy
+    let spreads            = [];   // array of [pageIdx] or [pageIdxLeft, pageIdxRight]
+    let currentSpread      = 0;
+    let currentLightboxPage = -1;
+    let initStarted        = false;
+    let renderToken        = 0;    // increments to cancel stale lightbox renders
+ 
+    // ============================================================
+    // INITIALIZATION (lazy on first dropdown open)
+    // ============================================================
     detailsEl.addEventListener("toggle", () => {
       if (detailsEl.open && !initStarted) {
         initStarted = true;
-        initFlipbook(PORTFOLIO_PDF).catch(err => {
+        initCarousel(PORTFOLIO_PDF).catch(err => {
           console.error(err);
           statusTxt.textContent = "could not load portfolio: " + err.message;
         });
       }
     });
  
-    // Render every page of pdfDocument at the given target width.
-    // Returns an array of JPEG data URLs.
-    async function renderAllPages(targetWidth, jpegQuality, progressCb) {
-      const numPages = pdfDocument.numPages;
-      const images = [];
-      for (let i = 1; i <= numPages; i++) {
-        if (progressCb) progressCb(i, numPages);
-        const page = await pdfDocument.getPage(i);
-        const baseVp = page.getViewport({ scale: 1 });
-        const scale = targetWidth / baseVp.width;
-        const vp = page.getViewport({ scale });
-        const canvas = document.createElement("canvas");
-        canvas.width  = vp.width;
-        canvas.height = vp.height;
-        await page.render({
-          canvasContext: canvas.getContext("2d"),
-          viewport: vp
-        }).promise;
-        images.push(canvas.toDataURL("image/jpeg", jpegQuality));
-        // free canvas reference
-        canvas.width = 0;
-        canvas.height = 0;
-      }
-      return images;
-    }
- 
-    async function initFlipbook(url) {
+    async function initCarousel(url) {
       statusEl.style.display = "block";
       statusTxt.textContent  = "loading portfolio";
       progressBar.style.width = "0%";
  
       pdfDocument = await pdfjsLib.getDocument(url).promise;
-      const numPages = pdfDocument.numPages;
+      numPages = pdfDocument.numPages;
  
-      // determine aspect from first page
-      const firstPage = await pdfDocument.getPage(1);
-      const aspect = firstPage.getViewport({ scale: 1 }).width
-                   / firstPage.getViewport({ scale: 1 }).height;
- 
-      // PHASE 1: render at RES_NORMAL for an interactive first paint
-      const images = await renderAllPages(RES_NORMAL, 0.92, (i, n) => {
-        statusTxt.textContent = `rendering ${i} of ${n}`;
-        progressBar.style.width = ((i - 1) / n * 100) + "%";
-      });
+      // render every page at carousel resolution
+      for (let i = 1; i <= numPages; i++) {
+        statusTxt.textContent = `rendering ${i} of ${numPages}`;
+        progressBar.style.width = ((i - 1) / numPages * 100) + "%";
+        carouselImages.push(await renderPageDataURL(i, CAROUSEL_RES, 0.92));
+      }
       progressBar.style.width = "100%";
  
-      // init flipbook
-      const wrapWidth = wrapEl.clientWidth - 32;
-      const initialPageW = Math.min(Math.floor(wrapWidth / 2), 700);
-      const initialPageH = Math.floor(initialPageW / aspect);
+      // build spread layout: cover alone, then real spreads
+      spreads = computeSpreads(numPages);
  
-      pageFlipInstance = new St.PageFlip(flipbookEl, {
-        width: initialPageW,
-        height: initialPageH,
-        size: "stretch",
-        minWidth: 280,
-        maxWidth: 1500,
-        minHeight: Math.floor(280 / aspect),
-        maxHeight: Math.floor(1500 / aspect),
-        showCover: true,
-        usePortrait: true,
-        autoSize: true,
-        flippingTime: 650,
-        maxShadowOpacity: 0,
-        drawShadow: false,
-        useMouseEvents: true,
-        mobileScrollSupport: true,
-        showPageCorners: false
-      });
-      pageFlipInstance.loadFromImages(images);
+      // wire up controls
+      prevBtn.disabled = false;
+      nextBtn.disabled = false;
+      prevBtn.addEventListener("click", goPrev);
+      nextBtn.addEventListener("click", goNext);
  
-      // controls
-      const totalPages = pageFlipInstance.getPageCount();
-      const updateIndicator = () => {
-        const idx = pageFlipInstance.getCurrentPageIndex();
-        indicatorEl.innerHTML =
-          (idx + 1) + ' <span class="sep">/</span> ' + totalPages;
-        prevBtn.disabled = idx <= 0;
-        nextBtn.disabled = idx >= totalPages - 1;
-      };
-      pageFlipInstance.on("flip", updateIndicator);
-      updateIndicator();
- 
-      prevBtn.addEventListener("click", e => {
+      // lightbox controls
+      lightboxClose.addEventListener("click", closeLightbox);
+      lightboxPrevBtn.addEventListener("click", e => {
         e.stopPropagation();
-        pageFlipInstance.flipPrev();
+        gotoLightboxPage(currentLightboxPage - 1);
       });
-      nextBtn.addEventListener("click", e => {
+      lightboxNextBtn.addEventListener("click", e => {
         e.stopPropagation();
-        pageFlipInstance.flipNext();
+        gotoLightboxPage(currentLightboxPage + 1);
       });
- 
-      // CLICK-TO-EXPAND
-      flipbookEl.addEventListener("click", e => {
-        if (!isExpanded) {
-          e.stopPropagation();
-          e.preventDefault();
-          enterFullscreen();
-        }
-      }, true);
- 
-      expandBtn.addEventListener("click", e => {
-        e.stopPropagation();
-        enterFullscreen();
-      });
-      closeBtn.addEventListener("click", e => {
-        e.stopPropagation();
-        exitFullscreen();
-      });
- 
-      wrapEl.addEventListener("click", e => {
-        if (isExpanded && e.target === wrapEl) exitFullscreen();
+      // click on white field (anywhere except the image / buttons / indicator) → close
+      lightboxEl.addEventListener("click", e => {
+        if (e.target === lightboxEl) closeLightbox();
       });
  
       // hide loading UI
       statusEl.style.display = "none";
  
-      // PHASE 2: schedule background hi-res upgrade after a short
-      // breath so the page feels responsive first.
-      setTimeout(() => upgradeToHighRes(), 600);
+      // show first spread
+      showSpread(0);
     }
  
     // ============================================================
-    // HI-RES UPGRADE
-    // Renders every page again at RES_HIGH (or fallback) and swaps
-    // them into the existing flipbook, preserving the current page.
+    // SPREAD COMPUTATION
+    // Cover page (index 0) sits alone, then real facing spreads.
     // ============================================================
-    async function upgradeToHighRes() {
-      if (isHighRes || highResUpgrading || !pdfDocument || !pageFlipInstance) return;
-      highResUpgrading = true;
-      // only show the indicator if user is currently in fullscreen
-      if (isExpanded) hiresStatus.classList.add("is-active");
+    function computeSpreads(n) {
+      const out = [];
+      if (n === 0) return out;
+      out.push([0]);                      // cover alone
+      for (let i = 1; i < n; i += 2) {
+        if (i + 1 < n) out.push([i, i + 1]);
+        else            out.push([i]);    // last page alone if odd count
+      }
+      return out;
+    }
  
-      const tryRender = async (width) => {
-        return await renderAllPages(width, 0.95, (i, n) => {
-          hiresStatus.textContent = `loading hi-res ${i} / ${n}`;
+    // ============================================================
+    // CAROUSEL NAVIGATION
+    // ============================================================
+    function showSpread(idx) {
+      if (idx < 0 || idx >= spreads.length) return;
+      currentSpread = idx;
+ 
+      // brief fade so transition feels intentional
+      spreadEl.classList.add("is-fading");
+      setTimeout(() => {
+        const pages = spreads[idx];
+        spreadEl.classList.toggle("is-cover", pages.length === 1);
+        spreadEl.innerHTML = pages.map(p =>
+          `<div class="carousel-page" data-page="${p}"><img src="${carouselImages[p]}" alt="page ${p + 1}" draggable="false"></div>`
+        ).join("");
+        // attach click handlers (lightbox open)
+        spreadEl.querySelectorAll(".carousel-page").forEach(pageEl => {
+          pageEl.addEventListener("click", () => {
+            openLightbox(parseInt(pageEl.dataset.page, 10));
+          });
         });
-      };
+        spreadEl.classList.remove("is-fading");
+      }, 200);
  
-      let images = null;
-      try {
-        images = await tryRender(RES_HIGH);
-      } catch (err) {
-        console.warn("hi-res render at " + RES_HIGH + " failed, falling back", err);
-        try {
-          images = await tryRender(RES_HIGH_FALLBACK);
-        } catch (err2) {
-          console.warn("hi-res fallback also failed, keeping normal-res", err2);
-        }
-      }
+      updateIndicator();
+    }
  
-      if (images) {
-        // swap in hi-res images, restore current page
-        const idx = pageFlipInstance.getCurrentPageIndex();
-        try {
-          pageFlipInstance.loadFromImages(images);
-          // give StPageFlip a tick, then restore the current page
-          setTimeout(() => {
-            try {
-              if (typeof pageFlipInstance.turnToPage === "function") {
-                pageFlipInstance.turnToPage(idx);
-              } else if (typeof pageFlipInstance.flip === "function") {
-                pageFlipInstance.flip(idx);
-              }
-            } catch (_) {}
-          }, 60);
-          isHighRes = true;
-        } catch (err) {
-          console.warn("could not swap hi-res images", err);
-        }
-      }
+    function goPrev() { if (currentSpread > 0) showSpread(currentSpread - 1); }
+    function goNext() { if (currentSpread < spreads.length - 1) showSpread(currentSpread + 1); }
  
-      highResUpgrading = false;
-      hiresStatus.classList.remove("is-active");
+    function updateIndicator() {
+      const pages = spreads[currentSpread];
+      const label = pages.length === 1
+        ? (pages[0] + 1).toString()
+        : (pages[0] + 1) + "–" + (pages[1] + 1);
+      indicatorEl.innerHTML = label + ' <span class="sep">/</span> ' + numPages;
+      prevBtn.disabled = currentSpread <= 0;
+      nextBtn.disabled = currentSpread >= spreads.length - 1;
     }
  
     // ============================================================
-    // FULLSCREEN
+    // LIGHTBOX
+    //   opens immediately with the carousel-res image (instant),
+    //   then fetches the high-res render in the background and
+    //   swaps it in once ready (cached so reopens are instant).
     // ============================================================
-    function enterFullscreen() {
-      if (isExpanded || !pageFlipInstance) return;
-      isExpanded = true;
-      document.body.classList.add("flipbook-locked");
-      wrapEl.classList.add("is-expanded");
-      // if hi-res is still loading, surface it now that user is in fullscreen
-      if (highResUpgrading) hiresStatus.classList.add("is-active");
-      requestAnimationFrame(() => {
-        if (pageFlipInstance && pageFlipInstance.update) {
-          try { pageFlipInstance.update(); } catch (_) {}
-        }
-      });
-    }
-    function exitFullscreen() {
-      if (!isExpanded) return;
-      isExpanded = false;
-      document.body.classList.remove("flipbook-locked");
-      wrapEl.classList.remove("is-expanded");
-      hiresStatus.classList.remove("is-active");
-      requestAnimationFrame(() => {
-        if (pageFlipInstance && pageFlipInstance.update) {
-          try { pageFlipInstance.update(); } catch (_) {}
-        }
-      });
+    function openLightbox(pageIdx) {
+      currentLightboxPage = pageIdx;
+      lightboxEl.classList.add("is-open");
+      lightboxEl.setAttribute("aria-hidden", "false");
+      document.body.classList.add("lightbox-locked");
+      gotoLightboxPage(pageIdx);
     }
  
-    // keyboard
-    document.addEventListener("keydown", e => {
-      if (!detailsEl.open || !pageFlipInstance) return;
-      if (e.key === "Escape" && isExpanded) {
-        exitFullscreen();
+    function closeLightbox() {
+      lightboxEl.classList.remove("is-open");
+      lightboxEl.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("lightbox-locked");
+      lightboxStatus.classList.remove("is-active");
+      currentLightboxPage = -1;
+    }
+ 
+    async function gotoLightboxPage(pageIdx) {
+      if (pageIdx < 0 || pageIdx >= numPages) return;
+      currentLightboxPage = pageIdx;
+      const myToken = ++renderToken;
+ 
+      // show carousel-res image immediately as a placeholder
+      lightboxImg.src = carouselImages[pageIdx];
+      lightboxIndic.innerHTML = (pageIdx + 1) + ' <span class="sep">/</span> ' + numPages;
+      lightboxPrevBtn.disabled = pageIdx <= 0;
+      lightboxNextBtn.disabled = pageIdx >= numPages - 1;
+ 
+      // already cached at hi-res?
+      if (highResCache[pageIdx]) {
+        lightboxImg.src = highResCache[pageIdx];
+        lightboxStatus.classList.remove("is-active");
         return;
       }
-      if (e.key === "ArrowLeft")  pageFlipInstance.flipPrev();
-      if (e.key === "ArrowRight") pageFlipInstance.flipNext();
+ 
+      // render fresh at hi-res
+      lightboxStatus.textContent = "loading hi-res";
+      lightboxStatus.classList.add("is-active");
+ 
+      let dataUrl = null;
+      try {
+        dataUrl = await renderPageDataURL(pageIdx + 1, LIGHTBOX_RES, 0.95);
+      } catch (err) {
+        console.warn("hi-res render failed at " + LIGHTBOX_RES + ", falling back", err);
+        try {
+          dataUrl = await renderPageDataURL(pageIdx + 1, LIGHTBOX_RES_FALLBACK, 0.95);
+        } catch (err2) {
+          console.warn("fallback also failed", err2);
+        }
+      }
+ 
+      // bail if user navigated away while we rendered
+      if (myToken !== renderToken) return;
+ 
+      if (dataUrl) {
+        highResCache[pageIdx] = dataUrl;
+        if (currentLightboxPage === pageIdx) {
+          lightboxImg.src = dataUrl;
+        }
+      }
+      lightboxStatus.classList.remove("is-active");
+    }
+ 
+    // ============================================================
+    // PDF.js page rendering helper
+    // ============================================================
+    async function renderPageDataURL(pageNumber1Based, targetWidth, jpegQuality) {
+      const page = await pdfDocument.getPage(pageNumber1Based);
+      const baseVp = page.getViewport({ scale: 1 });
+      const scale = targetWidth / baseVp.width;
+      const vp = page.getViewport({ scale });
+      const canvas = document.createElement("canvas");
+      canvas.width  = vp.width;
+      canvas.height = vp.height;
+      await page.render({
+        canvasContext: canvas.getContext("2d"),
+        viewport: vp
+      }).promise;
+      const url = canvas.toDataURL("image/jpeg", jpegQuality);
+      // free the canvas backing store
+      canvas.width = 0;
+      canvas.height = 0;
+      return url;
+    }
+ 
+    // ============================================================
+    // KEYBOARD
+    //   Lightbox open: ←/→ step pages, Esc closes
+    //   Carousel open (no lightbox): ←/→ step spreads
+    // ============================================================
+    document.addEventListener("keydown", e => {
+      if (lightboxEl.classList.contains("is-open")) {
+        if (e.key === "Escape")     { closeLightbox(); }
+        else if (e.key === "ArrowLeft")  { gotoLightboxPage(currentLightboxPage - 1); }
+        else if (e.key === "ArrowRight") { gotoLightboxPage(currentLightboxPage + 1); }
+        return;
+      }
+      if (detailsEl.open && pdfDocument) {
+        if (e.key === "ArrowLeft")  goPrev();
+        if (e.key === "ArrowRight") goNext();
+      }
     });
   </script>
 </body>
 </html>
- 
