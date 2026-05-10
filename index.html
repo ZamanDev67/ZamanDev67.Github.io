@@ -1,3 +1,6 @@
+Index · HTML
+Copy
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,22 +10,22 @@
   <link rel="stylesheet" href="https://use.typekit.net/ivv2sgr.css">
   <title>nima shariat zamanpour</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-
+ 
   <!-- PDF.js (renders PDF pages to canvas) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <!-- StPageFlip (book-like page flip UI) -->
   <script src="https://unpkg.com/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
-
+ 
   <style>
     @import url("https://use.typekit.net/ivv2sgr.css");
-
+ 
     body {
       font-family: courier-std, monospace;
       cursor: url("MAIN/CURSOR/20221019_autocadcursor_p_15px_02.png") 7 7, default;
       margin: 0;
       padding: 0;
     }
-
+ 
     h1 {
       font-family: courier-std, monospace;
       text-decoration: underline;
@@ -45,14 +48,14 @@
       font-weight: 400;
       font-style: normal;
     }
-
+ 
     .my-sidebar {
       background-color: transparent;
       padding: 1rem;
-      max-width: 980px; /* a bit wider so the book spread breathes */
+      max-width: 980px;
       margin: 0 auto;
     }
-
+ 
     .sticky-header {
       position: sticky;
       top: 0;
@@ -60,7 +63,7 @@
       z-index: 10;
       padding: 0.75rem 0 0.5rem;
     }
-
+ 
     /* profile photo placeholder.
        to swap in a real photo, replace the <div class="profile-photo"> block with:
        <img src="IMAGES/profile.jpg" alt="Nima Shariat Zamanpour" class="profile-photo"> */
@@ -81,8 +84,8 @@
       color: #888;
       letter-spacing: 0.1em;
     }
-
-    /* DROPDOWN — same [+]/[–] pattern, reusable for any future sections */
+ 
+    /* DROPDOWN */
     .project {
       border-top: 1px solid black;
       padding: 0.4rem 0;
@@ -108,52 +111,206 @@
     }
     .project[open] > summary::before { content: "[–]"; }
     .project-body { padding: 0.5rem 0 0.75rem 0; }
-
-    /* FLIPBOOK */
+ 
+    /* ============================================================
+       PORTFOLIO VIEWER  —  contemporary, gallery-like presentation
+       ============================================================ */
+ 
     .flipbook-wrap {
+      position: relative;
       width: 100%;
-      background: #f4f4f4;
-      padding: 1rem;
+      background: #ffffff;
+      padding: 2.25rem 1rem 1rem;
       box-sizing: border-box;
+      transition: padding 220ms ease;
     }
+ 
     #flipbook {
       margin: 0 auto;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-      background: #f4f4f4;
+      background: transparent;
     }
+ 
+    /* kill StPageFlip's flip-shadow gradients so pages stay true to PDF color */
+    #flipbook .stf__shadow,
+    #flipbook .stf__hardShadow,
+    #flipbook .stf__outerShadow,
+    #flipbook [class*="hadow"] {
+      display: none !important;
+      opacity: 0 !important;
+    }
+    #flipbook .stf__block,
+    #flipbook .stf__item,
+    #flipbook .stf__page,
+    #flipbook canvas,
+    #flipbook img {
+      box-shadow: none !important;
+      filter: none !important;
+      border-radius: 0 !important;
+    }
+ 
+    /* loading state (initial render) */
     .flipbook-status {
       font-family: courier-std, monospace;
-      font-size: 10pt;
+      font-size: 9pt;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
       text-align: center;
-      padding: 1rem;
-      color: #555;
+      padding: 1rem 0;
+      color: #888;
     }
-
+    .flipbook-progress {
+      display: block;
+      height: 1px;
+      width: 100%;
+      max-width: 280px;
+      margin: 0.5rem auto 0;
+      background: #eee;
+      overflow: hidden;
+    }
+    .flipbook-progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: #111;
+      transition: width 180ms ease;
+    }
+ 
+    /* hi-res upgrade indicator (only visible in fullscreen while upgrading) */
+    .flipbook-hires-status {
+      position: absolute;
+      top: 1.1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: courier-std, monospace;
+      font-size: 8pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #999;
+      pointer-events: none;
+      display: none;
+    }
+    .flipbook-wrap.is-expanded .flipbook-hires-status.is-active {
+      display: block;
+    }
+ 
+    /* control bar */
     .flipbook-controls {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-      padding: 0.75rem 0 0;
+      gap: 1.75rem;
+      padding: 1.25rem 0 0.5rem;
       font-family: courier-std, monospace;
-      font-size: 10pt;
+      font-size: 9pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #1a1a1a;
     }
     .flipbook-controls button {
-      font-family: courier-std, monospace;
-      font-size: 10pt;
-      background: white;
-      border: 1px solid black;
-      padding: 0.25rem 0.75rem;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: inherit;
+      background: transparent;
+      border: 0;
+      padding: 0.25rem 0.1rem;
       cursor: inherit;
+      position: relative;
+    }
+    .flipbook-controls button:not(:disabled):hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
     }
     .flipbook-controls button:disabled {
-      color: #aaa;
-      border-color: #ccc;
+      color: #c8c8c8;
       cursor: not-allowed;
     }
-    #flip-page-indicator { min-width: 5.5rem; text-align: center; }
-
-    /* footer links: CV / contact */
+    .flipbook-controls button.icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .flipbook-controls .icon svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+    }
+ 
+    #flip-page-indicator {
+      min-width: 4.5rem;
+      text-align: center;
+      font-feature-settings: "tnum" 1;
+      color: #555;
+    }
+    #flip-page-indicator .sep {
+      display: inline-block;
+      margin: 0 0.4em;
+      color: #aaa;
+    }
+ 
+    .flipbook-hint {
+      font-family: courier-std, monospace;
+      font-size: 8pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #b0b0b0;
+      text-align: center;
+      padding-top: 0.4rem;
+      transition: opacity 200ms ease;
+    }
+ 
+    /* FULLSCREEN — CSS-driven overlay */
+    .flipbook-wrap.is-expanded {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+      padding: 3rem 2rem 2rem;
+      cursor: zoom-out;
+    }
+    .flipbook-wrap.is-expanded #flipbook {
+      cursor: inherit;
+    }
+    .flipbook-wrap.is-expanded .flipbook-hint { display: none; }
+    .flipbook-wrap.is-expanded .flipbook-controls {
+      padding-top: 1.5rem;
+    }
+    body.flipbook-locked { overflow: hidden; }
+ 
+    .flipbook-close {
+      position: absolute;
+      top: 1.1rem;
+      right: 1.25rem;
+      width: 28px;
+      height: 28px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      cursor: inherit;
+      color: #1a1a1a;
+    }
+    .flipbook-close svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+    }
+    .flipbook-close:hover { color: #000; }
+    .flipbook-wrap.is-expanded .flipbook-close { display: inline-flex; }
+    .flipbook-wrap.is-expanded .flipbook-expand-btn { display: none; }
+    .flipbook-wrap:not(.is-expanded) #flipbook { cursor: zoom-in; }
+ 
+    /* footer links */
     .links {
       display: flex;
       gap: 1.25rem;
@@ -164,35 +321,37 @@
       font-family: courier-std, monospace;
       font-size: 11pt;
     }
-
+ 
     /* preserved scrollbar styling */
     ::-webkit-scrollbar { height: 10px; width: 5px; }
     ::-webkit-scrollbar-track { background: white; }
     ::-webkit-scrollbar-thumb { background: #D3D3D3; }
     ::-webkit-scrollbar-thumb:hover { background: #777; }
-
+ 
     @media (max-width: 768px) {
       h1, h2, h3, p { font-size: 90%; }
       .sticky-header { font-size: 12pt; }
-      .flipbook-wrap { padding: 0.5rem; }
+      .flipbook-wrap { padding: 1.25rem 0.5rem 0.75rem; }
+      .flipbook-wrap.is-expanded { padding: 2.5rem 0.5rem 1rem; }
+      .flipbook-controls { gap: 1rem; }
     }
   </style>
 </head>
 <body>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-
+ 
   <div class="container-fluid">
     <div class="row">
       <div class="col-12 my-sidebar">
-
+ 
         <!-- PROFILE PHOTO (placeholder — replace this div with <img class="profile-photo" src="IMAGES/profile.jpg" alt="Nima Shariat Zamanpour"> when ready) -->
         <div class="profile-photo profile-photo--placeholder">[ PHOTO ]</div>
-
+ 
         <!-- NAME -->
         <div class="sticky-header">
           <h3><div class="text-nowrap">NIMA SHARIAT ZAMANPOUR</div></h3>
         </div>
-
+ 
         <!-- BIO -->
         <h1>ABOUT</h1>
         <p>
@@ -204,150 +363,328 @@
           Nima's research interests encompass computational graphics, AI, urban planning, survivalism, simulations, the occult and Science and Technology Studies (STS).
           <br><br>
         </p>
-
+ 
         <!-- PORTFOLIO -->
         <h1>PORTFOLIO</h1>
         <details class="project" id="portfolio-details">
           <summary>NIMA SHARIAT ZAMANPOUR — PORTFOLIO</summary>
           <div class="project-body">
-            <div class="flipbook-wrap">
-              <div id="flipbook-status" class="flipbook-status">loading portfolio…</div>
+            <div class="flipbook-wrap" id="flipbook-wrap">
+ 
+              <!-- close button (only visible in fullscreen) -->
+              <button class="flipbook-close" id="flipbook-close" type="button" aria-label="Close fullscreen">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 5 L19 19 M19 5 L5 19" stroke-linecap="round"/>
+                </svg>
+              </button>
+ 
+              <!-- hi-res upgrade indicator (only visible in fullscreen while upgrading) -->
+              <div class="flipbook-hires-status" id="flipbook-hires-status">loading hi-res</div>
+ 
+              <div id="flipbook-status" class="flipbook-status">
+                <span id="flipbook-status-text">loading portfolio</span>
+                <span class="flipbook-progress"><span id="flipbook-progress-bar"></span></span>
+              </div>
+ 
               <div id="flipbook"></div>
-            </div>
-            <div class="flipbook-controls">
-              <button id="flip-prev" type="button" disabled>◀ PREV</button>
-              <span id="flip-page-indicator">– / –</span>
-              <button id="flip-next" type="button" disabled>NEXT ▶</button>
+ 
+              <div class="flipbook-hint" id="flipbook-hint">click to expand · drag pages or use arrows to flip</div>
+ 
+              <div class="flipbook-controls">
+                <button id="flip-prev" type="button" disabled aria-label="Previous page">← Prev</button>
+                <span id="flip-page-indicator">— <span class="sep">/</span> —</span>
+                <button id="flip-next" type="button" disabled aria-label="Next page">Next →</button>
+                <button id="flipbook-expand" class="icon flipbook-expand-btn" type="button" aria-label="Expand portfolio">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 9 V4 H9 M20 9 V4 H15 M4 15 V20 H9 M20 15 V20 H15" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Expand
+                </button>
+              </div>
+ 
             </div>
           </div>
         </details>
-
+ 
         <!-- LINKS -->
         <nav class="links">
           <a href="20260509_CV_NShariat.pdf" target="_blank" rel="noopener">CV</a>
           <a href="mailto:nszamanpour@gmail.com">CONTACT</a>
         </nav>
-
+ 
       </div>
     </div>
   </div>
-
+ 
   <script>
     // ============================================================
     // PORTFOLIO CONFIG
-    // ------------------------------------------------------------
-    // Update this filename/path to match the PDF in your repo.
-    // e.g. "PORTFOLIO.pdf"  or  "PDF/nima_portfolio_2025.pdf"
     // ============================================================
     const PORTFOLIO_PDF = "20250701_Portfolio_Medium_S_S_e1.pdf";
-
+ 
+    // RES_NORMAL: render width per page used for the initial book load.
+    //   High enough to look crisp embedded; low enough to load fast.
+    // RES_HIGH:   second-pass render width loaded silently in the
+    //   background. Pages hot-swap to this when ready, so anything
+    //   you do (including expanding) gets the higher quality.
+    // RES_HIGH_FALLBACK: used if the browser refuses RES_HIGH (mobile
+    //   canvas limits, etc.) — still better than RES_NORMAL.
+    const RES_NORMAL        = 2600;
+    const RES_HIGH          = 3800;
+    const RES_HIGH_FALLBACK = 3000;
+ 
     // ============================================================
-    // FLIPBOOK — lazy-initialized when the dropdown is first opened
-    // so the page stays light until someone actually wants it.
+    // FLIPBOOK
     // ============================================================
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
-    const detailsEl   = document.getElementById("portfolio-details");
-    const flipbookEl  = document.getElementById("flipbook");
-    const statusEl    = document.getElementById("flipbook-status");
-    const prevBtn     = document.getElementById("flip-prev");
-    const nextBtn     = document.getElementById("flip-next");
-    const indicatorEl = document.getElementById("flip-page-indicator");
-
+ 
+    const detailsEl    = document.getElementById("portfolio-details");
+    const wrapEl       = document.getElementById("flipbook-wrap");
+    const flipbookEl   = document.getElementById("flipbook");
+    const statusEl     = document.getElementById("flipbook-status");
+    const statusTxt    = document.getElementById("flipbook-status-text");
+    const progressBar  = document.getElementById("flipbook-progress-bar");
+    const hiresStatus  = document.getElementById("flipbook-hires-status");
+    const prevBtn      = document.getElementById("flip-prev");
+    const nextBtn      = document.getElementById("flip-next");
+    const expandBtn    = document.getElementById("flipbook-expand");
+    const closeBtn     = document.getElementById("flipbook-close");
+    const indicatorEl  = document.getElementById("flip-page-indicator");
+ 
+    let pdfDocument      = null;
     let pageFlipInstance = null;
     let initStarted      = false;
-
+    let isExpanded       = false;
+    let isHighRes        = false;   // have we swapped in hi-res?
+    let highResUpgrading = false;   // is a hi-res render in progress?
+ 
     detailsEl.addEventListener("toggle", () => {
       if (detailsEl.open && !initStarted) {
         initStarted = true;
         initFlipbook(PORTFOLIO_PDF).catch(err => {
           console.error(err);
-          statusEl.textContent = "could not load portfolio: " + err.message;
+          statusTxt.textContent = "could not load portfolio: " + err.message;
         });
       }
     });
-
-    async function initFlipbook(url) {
-      statusEl.style.display = "block";
-      statusEl.textContent = "loading portfolio…";
-
-      // 1. fetch the PDF
-      const pdf = await pdfjsLib.getDocument(url).promise;
-      const numPages = pdf.numPages;
-
-      // 2. determine aspect from first page
-      const firstPage = await pdf.getPage(1);
-      const baseViewport = firstPage.getViewport({ scale: 1 });
-      const aspect = baseViewport.width / baseViewport.height;
-
-      // 3. pick render scale for crisp pages
-      const targetWidth = 900;
-      const renderScale = targetWidth / baseViewport.width;
-
-      // 4. render every page to a JPEG data URL
-      const pageImages = [];
+ 
+    // Render every page of pdfDocument at the given target width.
+    // Returns an array of JPEG data URLs.
+    async function renderAllPages(targetWidth, jpegQuality, progressCb) {
+      const numPages = pdfDocument.numPages;
+      const images = [];
       for (let i = 1; i <= numPages; i++) {
-        statusEl.textContent = `rendering page ${i} / ${numPages}…`;
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale: renderScale });
+        if (progressCb) progressCb(i, numPages);
+        const page = await pdfDocument.getPage(i);
+        const baseVp = page.getViewport({ scale: 1 });
+        const scale = targetWidth / baseVp.width;
+        const vp = page.getViewport({ scale });
         const canvas = document.createElement("canvas");
-        canvas.width  = viewport.width;
-        canvas.height = viewport.height;
+        canvas.width  = vp.width;
+        canvas.height = vp.height;
         await page.render({
           canvasContext: canvas.getContext("2d"),
-          viewport: viewport
+          viewport: vp
         }).promise;
-        pageImages.push(canvas.toDataURL("image/jpeg", 0.85));
+        images.push(canvas.toDataURL("image/jpeg", jpegQuality));
+        // free canvas reference
+        canvas.width = 0;
+        canvas.height = 0;
       }
-
-      // 5. compute display size for the book
-      const wrapWidth = flipbookEl.parentElement.clientWidth - 32;
-      const maxSpreadW = Math.min(wrapWidth, 1100);
-      const pageW = Math.floor(maxSpreadW / 2);
-      const pageH = Math.floor(pageW / aspect);
-
-      // 6. init StPageFlip
+      return images;
+    }
+ 
+    async function initFlipbook(url) {
+      statusEl.style.display = "block";
+      statusTxt.textContent  = "loading portfolio";
+      progressBar.style.width = "0%";
+ 
+      pdfDocument = await pdfjsLib.getDocument(url).promise;
+      const numPages = pdfDocument.numPages;
+ 
+      // determine aspect from first page
+      const firstPage = await pdfDocument.getPage(1);
+      const aspect = firstPage.getViewport({ scale: 1 }).width
+                   / firstPage.getViewport({ scale: 1 }).height;
+ 
+      // PHASE 1: render at RES_NORMAL for an interactive first paint
+      const images = await renderAllPages(RES_NORMAL, 0.92, (i, n) => {
+        statusTxt.textContent = `rendering ${i} of ${n}`;
+        progressBar.style.width = ((i - 1) / n * 100) + "%";
+      });
+      progressBar.style.width = "100%";
+ 
+      // init flipbook
+      const wrapWidth = wrapEl.clientWidth - 32;
+      const initialPageW = Math.min(Math.floor(wrapWidth / 2), 700);
+      const initialPageH = Math.floor(initialPageW / aspect);
+ 
       pageFlipInstance = new St.PageFlip(flipbookEl, {
-        width: pageW,
-        height: pageH,
+        width: initialPageW,
+        height: initialPageH,
         size: "stretch",
         minWidth: 280,
-        maxWidth: 700,
+        maxWidth: 1500,
         minHeight: Math.floor(280 / aspect),
-        maxHeight: Math.floor(700 / aspect),
-        showCover: true,         // first page sits alone like a real cover
-        usePortrait: true,       // auto single-page on narrow screens
+        maxHeight: Math.floor(1500 / aspect),
+        showCover: true,
+        usePortrait: true,
         autoSize: true,
-        maxShadowOpacity: 0.4,
+        flippingTime: 650,
+        maxShadowOpacity: 0,
+        drawShadow: false,
+        useMouseEvents: true,
         mobileScrollSupport: true,
-        drawShadow: true
+        showPageCorners: false
       });
-      pageFlipInstance.loadFromImages(pageImages);
-
-      // 7. wire up controls + page indicator
+      pageFlipInstance.loadFromImages(images);
+ 
+      // controls
       const totalPages = pageFlipInstance.getPageCount();
       const updateIndicator = () => {
         const idx = pageFlipInstance.getCurrentPageIndex();
-        indicatorEl.textContent = (idx + 1) + " / " + totalPages;
+        indicatorEl.innerHTML =
+          (idx + 1) + ' <span class="sep">/</span> ' + totalPages;
         prevBtn.disabled = idx <= 0;
         nextBtn.disabled = idx >= totalPages - 1;
       };
       pageFlipInstance.on("flip", updateIndicator);
       updateIndicator();
-
-      prevBtn.addEventListener("click", () => pageFlipInstance.flipPrev());
-      nextBtn.addEventListener("click", () => pageFlipInstance.flipNext());
-
-      // arrow-key nav while the dropdown is open
-      document.addEventListener("keydown", e => {
-        if (!detailsEl.open) return;
-        if (e.key === "ArrowLeft")  pageFlipInstance.flipPrev();
-        if (e.key === "ArrowRight") pageFlipInstance.flipNext();
+ 
+      prevBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        pageFlipInstance.flipPrev();
       });
-
+      nextBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        pageFlipInstance.flipNext();
+      });
+ 
+      // CLICK-TO-EXPAND
+      flipbookEl.addEventListener("click", e => {
+        if (!isExpanded) {
+          e.stopPropagation();
+          e.preventDefault();
+          enterFullscreen();
+        }
+      }, true);
+ 
+      expandBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        enterFullscreen();
+      });
+      closeBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        exitFullscreen();
+      });
+ 
+      wrapEl.addEventListener("click", e => {
+        if (isExpanded && e.target === wrapEl) exitFullscreen();
+      });
+ 
+      // hide loading UI
       statusEl.style.display = "none";
+ 
+      // PHASE 2: schedule background hi-res upgrade after a short
+      // breath so the page feels responsive first.
+      setTimeout(() => upgradeToHighRes(), 600);
     }
+ 
+    // ============================================================
+    // HI-RES UPGRADE
+    // Renders every page again at RES_HIGH (or fallback) and swaps
+    // them into the existing flipbook, preserving the current page.
+    // ============================================================
+    async function upgradeToHighRes() {
+      if (isHighRes || highResUpgrading || !pdfDocument || !pageFlipInstance) return;
+      highResUpgrading = true;
+      // only show the indicator if user is currently in fullscreen
+      if (isExpanded) hiresStatus.classList.add("is-active");
+ 
+      const tryRender = async (width) => {
+        return await renderAllPages(width, 0.95, (i, n) => {
+          hiresStatus.textContent = `loading hi-res ${i} / ${n}`;
+        });
+      };
+ 
+      let images = null;
+      try {
+        images = await tryRender(RES_HIGH);
+      } catch (err) {
+        console.warn("hi-res render at " + RES_HIGH + " failed, falling back", err);
+        try {
+          images = await tryRender(RES_HIGH_FALLBACK);
+        } catch (err2) {
+          console.warn("hi-res fallback also failed, keeping normal-res", err2);
+        }
+      }
+ 
+      if (images) {
+        // swap in hi-res images, restore current page
+        const idx = pageFlipInstance.getCurrentPageIndex();
+        try {
+          pageFlipInstance.loadFromImages(images);
+          // give StPageFlip a tick, then restore the current page
+          setTimeout(() => {
+            try {
+              if (typeof pageFlipInstance.turnToPage === "function") {
+                pageFlipInstance.turnToPage(idx);
+              } else if (typeof pageFlipInstance.flip === "function") {
+                pageFlipInstance.flip(idx);
+              }
+            } catch (_) {}
+          }, 60);
+          isHighRes = true;
+        } catch (err) {
+          console.warn("could not swap hi-res images", err);
+        }
+      }
+ 
+      highResUpgrading = false;
+      hiresStatus.classList.remove("is-active");
+    }
+ 
+    // ============================================================
+    // FULLSCREEN
+    // ============================================================
+    function enterFullscreen() {
+      if (isExpanded || !pageFlipInstance) return;
+      isExpanded = true;
+      document.body.classList.add("flipbook-locked");
+      wrapEl.classList.add("is-expanded");
+      // if hi-res is still loading, surface it now that user is in fullscreen
+      if (highResUpgrading) hiresStatus.classList.add("is-active");
+      requestAnimationFrame(() => {
+        if (pageFlipInstance && pageFlipInstance.update) {
+          try { pageFlipInstance.update(); } catch (_) {}
+        }
+      });
+    }
+    function exitFullscreen() {
+      if (!isExpanded) return;
+      isExpanded = false;
+      document.body.classList.remove("flipbook-locked");
+      wrapEl.classList.remove("is-expanded");
+      hiresStatus.classList.remove("is-active");
+      requestAnimationFrame(() => {
+        if (pageFlipInstance && pageFlipInstance.update) {
+          try { pageFlipInstance.update(); } catch (_) {}
+        }
+      });
+    }
+ 
+    // keyboard
+    document.addEventListener("keydown", e => {
+      if (!detailsEl.open || !pageFlipInstance) return;
+      if (e.key === "Escape" && isExpanded) {
+        exitFullscreen();
+        return;
+      }
+      if (e.key === "ArrowLeft")  pageFlipInstance.flipPrev();
+      if (e.key === "ArrowRight") pageFlipInstance.flipNext();
+    });
   </script>
 </body>
 </html>
+ 
